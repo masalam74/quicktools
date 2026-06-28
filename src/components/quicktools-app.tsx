@@ -27,6 +27,7 @@ import {
   Share2,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { AdSenseAd } from '@/components/adsense-ad';
 import {
   toolsData,
   categories,
@@ -198,11 +199,9 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
                 </p>
               </div>
 
-              {/* Ad Placeholder - Top Banner */}
+              {/* Top Banner Ad */}
               <div className="mb-6">
-                <div className="w-full h-[90px] rounded-lg border-2 border-dashed border-muted-foreground/20 flex items-center justify-center text-xs text-muted-foreground/60 bg-muted/30">
-                  <span>Advertisement Space (728x90 Leaderboard)</span>
-                </div>
+                <AdSenseAd adSlot="top-banner" adFormat="horizontal" className="w-full" style={{ display: 'block', minHeight: '90px' }} />
               </div>
 
               {/* Tool Content with Sidebar Ad Layout */}
@@ -211,24 +210,18 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
                   {getToolComponent(currentTool.id)}
                 </div>
 
-                {/* Sidebar Ad - Desktop Only */}
+                {/* Sidebar Ads - Desktop Only */}
                 <div className="hidden lg:block w-[300px] shrink-0">
                   <div className="sticky top-24 space-y-6">
-                    <div className="h-[250px] rounded-lg border-2 border-dashed border-muted-foreground/20 flex items-center justify-center text-xs text-muted-foreground/60 bg-muted/30">
-                      <span className="text-center">Ad Space<br />(300x250)</span>
-                    </div>
-                    <div className="h-[250px] rounded-lg border-2 border-dashed border-muted-foreground/20 flex items-center justify-center text-xs text-muted-foreground/60 bg-muted/30">
-                      <span className="text-center">Ad Space<br />(300x250)</span>
-                    </div>
+                    <AdSenseAd adSlot="sidebar-1" adFormat="rectangle" style={{ display: 'block', minHeight: '250px' }} />
+                    <AdSenseAd adSlot="sidebar-2" adFormat="rectangle" style={{ display: 'block', minHeight: '250px' }} />
                   </div>
                 </div>
               </div>
 
               {/* Mobile Ad - Bottom */}
               <div className="mt-6 lg:hidden">
-                <div className="w-full h-[100px] rounded-lg border-2 border-dashed border-muted-foreground/20 flex items-center justify-center text-xs text-muted-foreground/60 bg-muted/30">
-                  <span>Advertisement Space (320x100 Mobile)</span>
-                </div>
+                <AdSenseAd adSlot="mobile-bottom" adFormat="horizontal" className="w-full" style={{ display: 'block', minHeight: '100px' }} />
               </div>
 
               {/* Related Tools */}
@@ -427,90 +420,14 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
                   ))}
                 </div>
 
-                {/* Bottom Ad Placeholder */}
+                {/* Bottom Banner Ad */}
                 <div className="mt-12">
-                  <div className="w-full max-w-4xl mx-auto h-[90px] rounded-lg border-2 border-dashed border-muted-foreground/20 flex items-center justify-center text-xs text-muted-foreground/60 bg-muted/30">
-                    <span>Advertisement Space (728x90 Leaderboard)</span>
+                  <div className="max-w-4xl mx-auto">
+                    <AdSenseAd adSlot="bottom-banner" adFormat="horizontal" className="w-full" style={{ display: 'block', minHeight: '90px' }} />
                   </div>
                 </div>
               </section>
 
-              {/* Business Model Section */}
-              <section className="border-t bg-muted/30">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-                  <div className="text-center mb-10">
-                    <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3">
-                      Why Simple Tool Websites Work
-                    </h2>
-                    <p className="text-muted-foreground max-w-2xl mx-auto">
-                      This is a live demonstration of the ad-monetized utility website business model.
-                      Here&apos;s why it&apos;s so effective:
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-                    <Card className="text-center">
-                      <CardContent className="p-6 sm:p-8">
-                        <div className="flex h-12 w-12 mx-auto mb-4 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400">
-                          <TrendingUp className="h-6 w-6" />
-                        </div>
-                        <h3 className="font-semibold mb-2">High Search Demand</h3>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                          Millions of people search for &quot;word counter&quot;, &quot;JSON formatter&quot;, and
-                          &quot;password generator&quot; every month. These tools answer real, recurring needs.
-                        </p>
-                      </CardContent>
-                    </Card>
-                    <Card className="text-center">
-                      <CardContent className="p-6 sm:p-8">
-                        <div className="flex h-12 w-12 mx-auto mb-4 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400">
-                          <Zap className="h-6 w-6" />
-                        </div>
-                        <h3 className="font-semibold mb-2">Zero Marginal Cost</h3>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                          These tools run entirely in the browser. No servers, no databases, no API costs.
-                          Once built, they cost nearly nothing to maintain and scale.
-                        </p>
-                      </CardContent>
-                    </Card>
-                    <Card className="text-center">
-                      <CardContent className="p-6 sm:p-8">
-                        <div className="flex h-12 w-12 mx-auto mb-4 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400">
-                          <Users className="h-6 w-6" />
-                        </div>
-                        <h3 className="font-semibold mb-2">Ad Revenue</h3>
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                          With Google AdSense or other ad networks, even modest traffic (10K-50K
-                          visitors/month) can generate $500-$5,000+/month in passive income.
-                        </p>
-                      </CardContent>
-                    </Card>
-                  </div>
-
-                  {/* Revenue Examples */}
-                  <div className="mt-10 p-6 sm:p-8 rounded-xl border bg-card">
-                    <h3 className="font-semibold mb-4 text-center">Real-World Revenue Examples</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                      {[
-                        { site: 'SmallPDF.com', revenue: '$17.5M/yr', traffic: '30M+/mo' },
-                        { site: 'TypingTest.com', revenue: '$140K/mo', traffic: '8M+/mo' },
-                        { site: 'BuiltWith.com', revenue: '$995/mo/user', traffic: '2M+/mo' },
-                        { site: 'UnitConverters.net', revenue: '$500K+/mo', traffic: '15M+/mo' },
-                      ].map((example) => (
-                        <div
-                          key={example.site}
-                          className="text-center p-4 rounded-lg bg-muted/50"
-                        >
-                          <p className="font-mono text-sm text-emerald-600 dark:text-emerald-400 font-medium">
-                            {example.site}
-                          </p>
-                          <p className="text-lg font-bold mt-1">{example.revenue}</p>
-                          <p className="text-xs text-muted-foreground">{example.traffic} visits</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </section>
             </motion.div>
           )}
         </AnimatePresence>
