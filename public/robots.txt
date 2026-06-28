@@ -1,14 +1,6 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
+# QuickTools - Sitemap & Robots
 User-agent: *
 Allow: /
+
+# Sitemap
+Sitemap: https://quicktools.vercel.app/sitemap.xml

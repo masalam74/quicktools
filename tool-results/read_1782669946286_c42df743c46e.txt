@@ -1,0 +1,754 @@
+     1→'use client';
+     2→
+     3→import { useState, useEffect, useCallback } from 'react';
+     4→import { motion, AnimatePresence } from 'framer-motion';
+     5→import { Card, CardContent } from '@/components/ui/card';
+     6→import { Button } from '@/components/ui/button';
+     7→import { Badge } from '@/components/ui/badge';
+     8→import { Separator } from '@/components/ui/separator';
+     9→import {
+    10→  ArrowLeft,
+    11→  Type,
+    12→  FileText,
+    13→  Braces,
+    14→  CaseSensitive,
+    15→  Key,
+    16→  Binary,
+    17→  Link,
+    18→  Palette,
+    19→  Zap,
+    20→  Globe,
+    21→  ArrowRight,
+    22→  TrendingUp,
+    23→  Users,
+    24→  Clock,
+    25→  Sparkles,
+    26→  Wrench,
+    27→  Share2,
+    28→  Check,
+    29→} from 'lucide-react';
+    30→import { useToast } from '@/hooks/use-toast';
+    31→import WordCounter from '@/components/tools/word-counter';
+    32→import LoremIpsum from '@/components/tools/lorem-ipsum';
+    33→import JsonFormatter from '@/components/tools/json-formatter';
+    34→import CaseConverter from '@/components/tools/case-converter';
+    35→import PasswordGenerator from '@/components/tools/password-generator';
+    36→import Base64Tool from '@/components/tools/base64-tool';
+    37→import UrlTool from '@/components/tools/url-tool';
+    38→import ColorPicker from '@/components/tools/color-picker';
+    39→
+    40→interface Tool {
+    41→  id: string;
+    42→  name: string;
+    43→  slug: string;
+    44→  description: string;
+    45→  metaDescription: string;
+    46→  keywords: string[];
+    47→  icon: React.ReactNode;
+    48→  category: string;
+    49→  searchVolume: string;
+    50→  component: React.ReactNode;
+    51→}
+    52→
+    53→const tools: Tool[] = [
+    54→  {
+    55→    id: 'word-counter',
+    56→    name: 'Word Counter',
+    57→    slug: 'word-counter',
+    58→    description: 'Count words, characters, sentences, paragraphs, and estimate reading & speaking time in real time.',
+    59→    metaDescription: 'Free online word counter tool. Instantly count words, characters, sentences, paragraphs. Estimate reading time and speaking time. No signup required.',
+    60→    keywords: ['word counter', 'character counter', 'word count', 'character count', 'sentence counter', 'paragraph counter', 'reading time calculator'],
+    61→    icon: <Type className="h-6 w-6" />,
+    62→    category: 'Text',
+    63→    searchVolume: '550K/mo',
+    64→    component: <WordCounter />,
+    65→  },
+    66→  {
+    67→    id: 'lorem-ipsum',
+    68→    name: 'Lorem Ipsum Generator',
+    69→    slug: 'lorem-ipsum-generator',
+    70→    description: 'Generate placeholder text for your designs and mockups with customizable paragraph count.',
+    71→    metaDescription: 'Free Lorem Ipsum generator. Create placeholder text for web design, mockups, and layouts. Customizable paragraph count. Instant copy.',
+    72→    keywords: ['lorem ipsum generator', 'placeholder text', 'dummy text', 'filler text', 'lipsum generator'],
+    73→    icon: <FileText className="h-6 w-6" />,
+    74→    category: 'Text',
+    75→    searchVolume: '368K/mo',
+    76→    component: <LoremIpsum />,
+    77→  },
+    78→  {
+    79→    id: 'json-formatter',
+    80→    name: 'JSON Formatter',
+    81→    slug: 'json-formatter',
+    82→    description: 'Format, minify, and validate JSON data with syntax highlighting and customizable indentation.',
+    83→    metaDescription: 'Free online JSON formatter, validator, and minifier. Beautify JSON with syntax highlighting. Custom indent options. Validate JSON instantly.',
+    84→    keywords: ['json formatter', 'json validator', 'json beautifier', 'json minifier', 'json pretty print', 'format json online'],
+    85→    icon: <Braces className="h-6 w-6" />,
+    86→    category: 'Developer',
+    87→    searchVolume: '450K/mo',
+    88→    component: <JsonFormatter />,
+    89→  },
+    90→  {
+    91→    id: 'case-converter',
+    92→    name: 'Case Converter',
+    93→    slug: 'case-converter',
+    94→    description: 'Convert text between UPPERCASE, lowercase, Title Case, camelCase, snake_case, kebab-case and more.',
+    95→    metaDescription: 'Free online case converter. Convert text to UPPERCASE, lowercase, Title Case, camelCase, snake_case, kebab-case, and 11 more formats. Instant results.',
+    96→    keywords: ['case converter', 'uppercase converter', 'lowercase converter', 'title case', 'camelcase converter', 'snake case converter'],
+    97→    icon: <CaseSensitive className="h-6 w-6" />,
+    98→    category: 'Text',
+    99→    searchVolume: '246K/mo',
+   100→    component: <CaseConverter />,
+   101→  },
+   102→  {
+   103→    id: 'password-generator',
+   104→    name: 'Password Generator',
+   105→    slug: 'password-generator',
+   106→    description: 'Generate secure, random passwords with customizable length, character types, and strength indicator.',
+   107→    metaDescription: 'Free secure password generator. Create strong random passwords with customizable length, uppercase, lowercase, numbers, and symbols. Cryptographically secure.',
+   108→    keywords: ['password generator', 'strong password generator', 'random password', 'secure password', 'free password generator'],
+   109→    icon: <Key className="h-6 w-6" />,
+   110→    category: 'Security',
+   111→    searchVolume: '823K/mo',
+   112→    component: <PasswordGenerator />,
+   113→  },
+   114→  {
+   115→    id: 'base64',
+   116→    name: 'Base64 Encoder/Decoder',
+   117→    slug: 'base64-encoder-decoder',
+   118→    description: 'Encode text to Base64 or decode Base64 back to text instantly. Supports Unicode characters.',
+   119→    metaDescription: 'Free Base64 encoder and decoder. Convert text to Base64 and back. Supports Unicode characters. Instant results, no data sent to server.',
+   120→    keywords: ['base64 encoder', 'base64 decoder', 'base64 encode', 'base64 decode', 'base64 converter', 'encode base64 online'],
+   121→    icon: <Binary className="h-6 w-6" />,
+   122→    category: 'Developer',
+   123→    searchVolume: '201K/mo',
+   124→    component: <Base64Tool />,
+   125→  },
+   126→  {
+   127→    id: 'url-encoder',
+   128→    name: 'URL Encoder/Decoder',
+   129→    slug: 'url-encoder-decoder',
+   130→    description: 'Encode or decode URL components. Perfect for working with query parameters and special characters.',
+   131→    metaDescription: 'Free URL encoder and decoder online. Encode and decode URL components, query parameters, and special characters instantly.',
+   132→    keywords: ['url encoder', 'url decoder', 'encode url', 'decode url', 'url encoding', 'percent encoding', 'urlencode online'],
+   133→    icon: <Link className="h-6 w-6" />,
+   134→    category: 'Developer',
+   135→    searchVolume: '165K/mo',
+   136→    component: <UrlTool />,
+   137→  },
+   138→  {
+   139→    id: 'color-picker',
+   140→    name: 'Color Picker & Converter',
+   141→    slug: 'color-picker-converter',
+   142→    description: 'Pick colors and convert between HEX, RGB, HSL, and HSV formats. Includes alpha support.',
+   143→    metaDescription: 'Free online color picker and converter. Convert between HEX, RGB, HSL, and HSV formats. Color sliders, alpha support, random color generator.',
+   144→    keywords: ['color picker', 'color converter', 'hex to rgb', 'rgb to hex', 'hsl converter', 'color tool online'],
+   145→    icon: <Palette className="h-6 w-6" />,
+   146→    category: 'Design',
+   147→    searchVolume: '495K/mo',
+   148→    component: <ColorPicker />,
+   149→  },
+   150→];
+   151→
+   152→const toolBySlug: Record<string, Tool> = {};
+   153→tools.forEach((t) => {
+   154→  toolBySlug[t.slug] = t;
+   155→  toolBySlug[t.id] = t;
+   156→});
+   157→
+   158→const categories = ['All', ...Array.from(new Set(tools.map((t) => t.category)))];
+   159→
+   160→function getHash(): string {
+   161→  if (typeof window === 'undefined') return '';
+   162→  const hash = window.location.hash.replace('#/', '').replace('#', '');
+   163→  return hash || '';
+   164→}
+   165→
+   166→export default function HomePage() {
+   167→  const [activeToolId, setActiveToolId] = useState<string | null>(null);
+   168→  const [activeCategory, setActiveCategory] = useState('All');
+   169→  const [copiedShare, setCopiedShare] = useState(false);
+   170→  const { toast } = useToast();
+   171→
+   172→  // Initialize from hash on mount
+   173→  useEffect(() => {
+   174→    const hash = getHash();
+   175→    if (hash && toolBySlug[hash]) {
+   176→      setActiveToolId(toolBySlug[hash].id);
+   177→    }
+   178→  }, []);
+   179→
+   180→  // Listen for hash changes (browser back/forward)
+   181→  useEffect(() => {
+   182→    const handleHashChange = () => {
+   183→      const hash = getHash();
+   184→      if (hash && toolBySlug[hash]) {
+   185→        setActiveToolId(toolBySlug[hash].id);
+   186→      } else {
+   187→        setActiveToolId(null);
+   188→      }
+   189→    };
+   190→    window.addEventListener('hashchange', handleHashChange);
+   191→    return () => window.removeEventListener('hashchange', handleHashChange);
+   192→  }, []);
+   193→
+   194→  // Update document title and meta description dynamically
+   195→  useEffect(() => {
+   196→    if (activeToolId) {
+   197→      const tool = tools.find((t) => t.id === activeToolId);
+   198→      if (tool) {
+   199→        document.title = `Free ${tool.name} — QuickTools`;
+   200→        // Update meta description
+   201→        const metaDesc = document.querySelector('meta[name="description"]');
+   202→        if (metaDesc) {
+   203→          metaDesc.setAttribute('content', tool.metaDescription);
+   204→        }
+   205→        // Update meta keywords
+   206→        const metaKeywords = document.querySelector('meta[name="keywords"]');
+   207→        if (metaKeywords) {
+   208→          metaKeywords.setAttribute('content', tool.keywords.join(', '));
+   209→        }
+   210→      }
+   211→    } else {
+   212→      document.title = 'QuickTools — 8 Free Online Tools for Developers, Designers & Creators';
+   213→      const metaDesc = document.querySelector('meta[name="description"]');
+   214→      if (metaDesc) {
+   215→        metaDesc.setAttribute('content', 'Free online tools: Word Counter, Lorem Ipsum Generator, JSON Formatter, Case Converter, Password Generator, Base64 Encoder, URL Encoder, and Color Picker. No signup required.');
+   216→      }
+   217→    }
+   218→  }, [activeToolId]);
+   219→
+   220→  const navigateToTool = useCallback((toolId: string) => {
+   221→    const tool = tools.find((t) => t.id === toolId);
+   222→    if (tool) {
+   223→      window.location.hash = `/${tool.slug}`;
+   224→      setActiveToolId(toolId);
+   225→      window.scrollTo({ top: 0, behavior: 'smooth' });
+   226→    }
+   227→  }, []);
+   228→
+   229→  const navigateHome = useCallback(() => {
+   230→    window.location.hash = '';
+   231→    setActiveToolId(null);
+   232→    window.scrollTo({ top: 0, behavior: 'smooth' });
+   233→  }, []);
+   234→
+   235→  const handleShare = useCallback(() => {
+   236→    if (!activeToolId) return;
+   237→    const tool = tools.find((t) => t.id === activeToolId);
+   238→    if (!tool) return;
+   239→    const url = window.location.href;
+   240→    navigator.clipboard.writeText(url).then(() => {
+   241→      setCopiedShare(true);
+   242→      toast({
+   243→        title: 'Link copied!',
+   244→        description: `Share this link: ${url}`,
+   245→      });
+   246→      setTimeout(() => setCopiedShare(false), 2000);
+   247→    });
+   248→  }, [activeToolId, toast]);
+   249→
+   250→  const filteredTools =
+   251→    activeCategory === 'All'
+   252→      ? tools
+   253→      : tools.filter((t) => t.category === activeCategory);
+   254→
+   255→  const currentTool = tools.find((t) => t.id === activeToolId);
+   256→
+   257→  return (
+   258→    <div className="min-h-screen flex flex-col bg-background">
+   259→      {/* Header */}
+   260→      <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-md">
+   261→        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+   262→          <div className="flex h-16 items-center justify-between">
+   263→            <button
+   264→              onClick={navigateHome}
+   265→              className="flex items-center gap-2 text-lg font-bold tracking-tight hover:opacity-80 transition-opacity"
+   266→            >
+   267→              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white">
+   268→                <Zap className="h-5 w-5" />
+   269→              </div>
+   270→              <span>QuickTools</span>
+   271→            </button>
+   272→
+   273→            {activeTool && currentTool && (
+   274→              <motion.div
+   275→                initial={{ opacity: 0, x: 20 }}
+   276→                animate={{ opacity: 1, x: 0 }}
+   277→                className="flex items-center gap-2"
+   278→              >
+   279→                <span className="text-sm text-muted-foreground hidden sm:inline">
+   280→                  {currentTool.name}
+   281→                </span>
+   282→                <Button
+   283→                  variant="outline"
+   284→                  size="sm"
+   285→                  onClick={handleShare}
+   286→                  className="gap-1.5"
+   287→                >
+   288→                  {copiedShare ? (
+   289→                    <Check className="h-4 w-4 text-emerald-600" />
+   290→                  ) : (
+   291→                    <Share2 className="h-4 w-4" />
+   292→                  )}
+   293→                  <span className="hidden sm:inline">{copiedShare ? 'Copied!' : 'Share'}</span>
+   294→                </Button>
+   295→                <Button
+   296→                  variant="outline"
+   297→                  size="sm"
+   298→                  onClick={navigateHome}
+   299→                  className="gap-1.5"
+   300→                >
+   301→                  <ArrowLeft className="h-4 w-4" />
+   302→                  <span className="hidden sm:inline">All Tools</span>
+   303→                </Button>
+   304→              </motion.div>
+   305→            )}
+   306→
+   307→            {!activeTool && (
+   308→              <div className="flex items-center gap-2">
+   309→                <Badge variant="secondary" className="hidden sm:flex items-center gap-1">
+   310→                  <Globe className="h-3 w-3" />
+   311→                  8 Free Tools
+   312→                </Badge>
+   313→              </div>
+   314→            )}
+   315→          </div>
+   316→        </div>
+   317→      </header>
+   318→
+   319→      {/* Main Content */}
+   320→      <main className="flex-1">
+   321→        <AnimatePresence mode="wait">
+   322→          {activeTool && currentTool ? (
+   323→            <motion.div
+   324→              key={activeTool}
+   325→              initial={{ opacity: 0, y: 20 }}
+   326→              animate={{ opacity: 1, y: 0 }}
+   327→              exit={{ opacity: 0, y: -20 }}
+   328→              transition={{ duration: 0.2 }}
+   329→              className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6"
+   330→            >
+   331→              {/* Tool Header */}
+   332→              <div className="mb-6">
+   333→                <div className="flex items-center gap-3 mb-2">
+   334→                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400">
+   335→                    {currentTool.icon}
+   336→                  </div>
+   337→                  <div>
+   338→                    <h1 className="text-2xl font-bold tracking-tight">{currentTool.name}</h1>
+   339→                    <p className="text-sm text-muted-foreground">{currentTool.description}</p>
+   340→                  </div>
+   341→                </div>
+   342→              </div>
+   343→
+   344→              {/* Ad Placeholder - Top Banner */}
+   345→              <div className="mb-6">
+   346→                <div className="w-full h-[90px] rounded-lg border-2 border-dashed border-muted-foreground/20 flex items-center justify-center text-xs text-muted-foreground/60 bg-muted/30">
+   347→                  <span>Advertisement Space (728x90 Leaderboard)</span>
+   348→                </div>
+   349→              </div>
+   350→
+   351→              {/* Tool Content with Sidebar Ad Layout */}
+   352→              <div className="flex flex-col lg:flex-row gap-6">
+   353→                <div className="flex-1 min-w-0">
+   354→                  {currentTool.component}
+   355→                </div>
+   356→
+   357→                {/* Sidebar Ad - Desktop Only */}
+   358→                <div className="hidden lg:block w-[300px] shrink-0">
+   359→                  <div className="sticky top-24 space-y-6">
+   360→                    <div className="h-[250px] rounded-lg border-2 border-dashed border-muted-foreground/20 flex items-center justify-center text-xs text-muted-foreground/60 bg-muted/30">
+   361→                      <span className="text-center">Ad Space<br />(300x250)</span>
+   362→                    </div>
+   363→                    <div className="h-[250px] rounded-lg border-2 border-dashed border-muted-foreground/20 flex items-center justify-center text-xs text-muted-foreground/60 bg-muted/30">
+   364→                      <span className="text-center">Ad Space<br />(300x250)</span>
+   365→                    </div>
+   366→                  </div>
+   367→                </div>
+   368→              </div>
+   369→
+   370→              {/* Mobile Ad - Bottom */}
+   371→              <div className="mt-6 lg:hidden">
+   372→                <div className="w-full h-[100px] rounded-lg border-2 border-dashed border-muted-foreground/20 flex items-center justify-center text-xs text-muted-foreground/60 bg-muted/30">
+   373→                  <span>Advertisement Space (320x100 Mobile)</span>
+   374→                </div>
+   375→              </div>
+   376→
+   377→              {/* SEO Content Below Tool */}
+   378→              <div className="mt-8 p-6 rounded-xl border bg-muted/30">
+   379→                <h2 className="font-semibold mb-2">About {currentTool.name}</h2>
+   380→                <p className="text-sm text-muted-foreground leading-relaxed mb-3">
+   381→                  {currentTool.metaDescription}
+   382→                </p>
+   383→                <p className="text-sm text-muted-foreground leading-relaxed">
+   384→                  This tool runs entirely in your browser. Your data is never sent to any server. 
+   385→                  Bookmark this page and use it anytime you need a free online {currentTool.name.toLowerCase()}.
+   386→                </p>
+   387→              </div>
+   388→
+   389→              {/* Related Tools */}
+   390→              <div className="mt-6">
+   391→                <h3 className="font-semibold mb-3">Related Tools</h3>
+   392→                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+   393→                  {tools
+   394→                    .filter((t) => t.id !== activeTool)
+   395→                    .sort(() => Math.random() - 0.5)
+   396→                    .slice(0, 4)
+   397→                    .map((tool) => (
+   398→                      <Card
+   399→                        key={tool.id}
+   400→                        className="cursor-pointer hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors"
+   401→                        onClick={() => navigateToTool(tool.id)}
+   402→                      >
+   403→                        <CardContent className="p-4 flex items-center gap-3">
+   404→                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400">
+   405→                            {tool.icon}
+   406→                          </div>
+   407→                          <div className="min-w-0">
+   408→                            <p className="text-sm font-medium truncate">{tool.name}</p>
+   409→                            <p className="text-xs text-muted-foreground">{tool.searchVolume}</p>
+   410→                          </div>
+   411→                        </CardContent>
+   412→                      </Card>
+   413→                    ))}
+   414→                </div>
+   415→              </div>
+   416→            </motion.div>
+   417→          ) : (
+   418→            <motion.div
+   419→              key="home"
+   420→              initial={{ opacity: 0, y: 20 }}
+   421→              animate={{ opacity: 1, y: 0 }}
+   422→              exit={{ opacity: 0, y: -20 }}
+   423→              transition={{ duration: 0.2 }}
+   424→            >
+   425→              {/* Hero Section */}
+   426→              <section className="relative overflow-hidden border-b">
+   427→                <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-transparent to-teal-50 dark:from-emerald-950/30 dark:via-transparent dark:to-teal-950/20" />
+   428→                <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+   429→                  <div className="text-center max-w-3xl mx-auto">
+   430→                    <motion.div
+   431→                      initial={{ opacity: 0, y: 10 }}
+   432→                      animate={{ opacity: 1, y: 0 }}
+   433→                      transition={{ delay: 0.1 }}
+   434→                    >
+   435→                      <Badge className="mb-4 bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-900/50 dark:text-emerald-400 border-0">
+   436→                        <Sparkles className="h-3 w-3 mr-1" />
+   437→                        Free Online Tools — No Signup Required
+   438→                      </Badge>
+   439→                    </motion.div>
+   440→                    <motion.h1
+   441→                      initial={{ opacity: 0, y: 10 }}
+   442→                      animate={{ opacity: 1, y: 0 }}
+   443→                      transition={{ delay: 0.2 }}
+   444→                      className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6"
+   445→                    >
+   446→                      Simple Tools That{' '}
+   447→                      <span className="text-emerald-600 dark:text-emerald-400">Save Time</span>
+   448→                    </motion.h1>
+   449→                    <motion.p
+   450→                      initial={{ opacity: 0, y: 10 }}
+   451→                      animate={{ opacity: 1, y: 0 }}
+   452→                      transition={{ delay: 0.3 }}
+   453→                      className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto"
+   454→                    >
+   455→                      A collection of fast, free, and privacy-friendly online tools for developers,
+   456→                      designers, and content creators. No ads, no tracking, no nonsense.
+   457→                    </motion.p>
+   458→                    <motion.div
+   459→                      initial={{ opacity: 0, y: 10 }}
+   460→                      animate={{ opacity: 1, y: 0 }}
+   461→                      transition={{ delay: 0.4 }}
+   462→                      className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground"
+   463→                    >
+   464→                      <div className="flex items-center gap-1.5">
+   465→                        <Wrench className="h-4 w-4 text-emerald-600" />
+   466→                        8 Free Tools
+   467→                      </div>
+   468→                      <Separator orientation="vertical" className="h-4" />
+   469→                      <div className="flex items-center gap-1.5">
+   470→                        <Clock className="h-4 w-4 text-emerald-600" />
+   471→                        Instant Results
+   472→                      </div>
+   473→                      <Separator orientation="vertical" className="h-4" />
+   474→                      <div className="flex items-center gap-1.5">
+   475→                        <Users className="h-4 w-4 text-emerald-600" />
+   476→                        3M+ Monthly Searches
+   477→                      </div>
+   478→                    </motion.div>
+   479→                  </div>
+   480→                </div>
+   481→              </section>
+   482→
+   483→              {/* Stats Bar */}
+   484→              <section className="border-b bg-muted/30">
+   485→                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+   486→                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+   487→                    <div>
+   488→                      <div className="flex items-center justify-center gap-1.5 text-2xl sm:text-3xl font-bold text-emerald-600 dark:text-emerald-400">
+   489→                        <TrendingUp className="h-6 w-6 sm:h-7 sm:w-7" />
+   490→                        3.3M+
+   491→                      </div>
+   492→                      <p className="text-sm text-muted-foreground mt-1">Monthly Search Volume</p>
+   493→                    </div>
+   494→                    <div>
+   495→                      <div className="flex items-center justify-center gap-1.5 text-2xl sm:text-3xl font-bold text-emerald-600 dark:text-emerald-400">
+   496→                        <Users className="h-6 w-6 sm:h-7 sm:w-7" />
+   497→                        100%
+   498→                      </div>
+   499→                      <p className="text-sm text-muted-foreground mt-1">Free to Use</p>
+   500→                    </div>
+   501→                    <div>
+   502→                      <div className="flex items-center justify-center gap-1.5 text-2xl sm:text-3xl font-bold text-emerald-600 dark:text-emerald-400">
+   503→                        <Zap className="h-6 w-6 sm:h-7 sm:w-7" />
+   504→                        0ms
+   505→                      </div>
+   506→                      <p className="text-sm text-muted-foreground mt-1">Server Processing</p>
+   507→                    </div>
+   508→                    <div>
+   509→                      <div className="flex items-center justify-center gap-1.5 text-2xl sm:text-3xl font-bold text-emerald-600 dark:text-emerald-400">
+   510→                        <Globe className="h-6 w-6 sm:h-7 sm:w-7" />
+   511→                        All Data
+   512→                      </div>
+   513→                      <p className="text-sm text-muted-foreground mt-1">Processed Locally</p>
+   514→                    </div>
+   515→                  </div>
+   516→                </div>
+   517→              </section>
+   518→
+   519→              {/* Tools Section */}
+   520→              <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+   521→                {/* Category Filter */}
+   522→                <div className="flex flex-wrap items-center gap-2 mb-8">
+   523→                  <span className="text-sm font-medium text-muted-foreground mr-2">Filter:</span>
+   524→                  {categories.map((cat) => (
+   525→                    <Button
+   526→                      key={cat}
+   527→                      variant={activeCategory === cat ? 'default' : 'outline'}
+   528→                      size="sm"
+   529→                      onClick={() => setActiveCategory(cat)}
+   530→                      className={
+   531→                        activeCategory === cat
+   532→                          ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+   533→                          : ''
+   534→                      }
+   535→                    >
+   536→                      {cat}
+   537→                    </Button>
+   538→                  ))}
+   539→                </div>
+   540→
+   541→                {/* Tool Cards Grid */}
+   542→                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+   543→                  {filteredTools.map((tool, index) => (
+   544→                    <motion.div
+   545→                      key={tool.id}
+   546→                      initial={{ opacity: 0, y: 20 }}
+   547→                      animate={{ opacity: 1, y: 0 }}
+   548→                      transition={{ delay: index * 0.05, duration: 0.3 }}
+   549→                    >
+   550→                      <Card
+   551→                        className="group cursor-pointer h-full hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-md hover:shadow-emerald-100 dark:hover:shadow-emerald-950/50 transition-all duration-200"
+   552→                        onClick={() => navigateToTool(tool.id)}
+   553→                      >
+   554→                        <CardContent className="p-5 sm:p-6">
+   555→                          <div className="flex items-start justify-between mb-4">
+   556→                            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400 group-hover:bg-emerald-200 dark:group-hover:bg-emerald-900/80 transition-colors">
+   557→                              {tool.icon}
+   558→                            </div>
+   559→                            <Badge variant="secondary" className="text-xs font-normal">
+   560→                              {tool.category}
+   561→                            </Badge>
+   562→                          </div>
+   563→                          <h3 className="font-semibold mb-1.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+   564→                            {tool.name}
+   565→                          </h3>
+   566→                          <p className="text-sm text-muted-foreground leading-relaxed mb-4 line-clamp-2">
+   567→                            {tool.description}
+   568→                          </p>
+   569→                          <div className="flex items-center justify-between">
+   570→                            <span className="text-xs text-muted-foreground">
+   571→                              {tool.searchVolume} searches
+   572→                            </span>
+   573→                            <span className="text-emerald-600 dark:text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 text-sm font-medium">
+   574→                              Open
+   575→                              <ArrowRight className="h-3.5 w-3.5" />
+   576→                            </span>
+   577→                          </div>
+   578→                        </CardContent>
+   579→                      </Card>
+   580→                    </motion.div>
+   581→                  ))}
+   582→                </div>
+   583→
+   584→                {/* Bottom Ad Placeholder */}
+   585→                <div className="mt-12">
+   586→                  <div className="w-full max-w-4xl mx-auto h-[90px] rounded-lg border-2 border-dashed border-muted-foreground/20 flex items-center justify-center text-xs text-muted-foreground/60 bg-muted/30">
+   587→                    <span>Advertisement Space (728x90 Leaderboard)</span>
+   588→                  </div>
+   589→                </div>
+   590→              </section>
+   591→
+   592→              {/* SEO Content Section */}
+   593→              <section className="border-t bg-muted/30">
+   594→                <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+   595→                  <h2 className="text-2xl font-bold tracking-tight mb-4 text-center">
+   596→                    Free Online Tools — No Signup, No Limits
+   597→                  </h2>
+   598→                  <div className="prose prose-sm sm:prose-base dark:prose-invert max-w-none text-muted-foreground space-y-4">
+   599→                    <p>
+   600→                      QuickTools offers 8 free online tools that run entirely in your browser. 
+   601→                      No data is ever sent to a server, making our tools the fastest and most 
+   602→                      private option available. Whether you&apos;re a developer, designer, writer, 
+   603→                      or anyone who needs quick utility — we&apos;ve got you covered.
+   604→                    </p>
+   605→                    <p>
+   606→                      Our <strong>Word Counter</strong> instantly counts words, characters, sentences, 
+   607→                      and paragraphs while estimating reading and speaking time. The <strong>JSON Formatter</strong> 
+   608→                      beautifies and validates JSON with syntax highlighting. The <strong>Password Generator</strong> 
+   609→                      creates cryptographically secure random passwords. And the <strong>Color Picker</strong> 
+   610→                      converts between HEX, RGB, HSL, and HSV color formats.
+   611→                    </p>
+   612→                    <p>
+   613→                      All tools are free to use, require no signup or account, and work on any device 
+   614→                      with a modern web browser. Bookmark your favorite tools and use them anytime.
+   615→                    </p>
+   616→                  </div>
+   617→                </div>
+   618→              </section>
+   619→
+   620→              {/* How It Works / Business Model Section */}
+   621→              <section className="border-t">
+   622→                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+   623→                  <div className="text-center mb-10">
+   624→                    <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-3">
+   625→                      Why Simple Tool Websites Work
+   626→                    </h2>
+   627→                    <p className="text-muted-foreground max-w-2xl mx-auto">
+   628→                      This is a live demonstration of the ad-monetized utility website business model.
+   629→                      Here&apos;s why it&apos;s so effective:
+   630→                    </p>
+   631→                  </div>
+   632→                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+   633→                    <Card className="text-center">
+   634→                      <CardContent className="p-6 sm:p-8">
+   635→                        <div className="flex h-12 w-12 mx-auto mb-4 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400">
+   636→                          <TrendingUp className="h-6 w-6" />
+   637→                        </div>
+   638→                        <h3 className="font-semibold mb-2">High Search Demand</h3>
+   639→                        <p className="text-sm text-muted-foreground leading-relaxed">
+   640→                          Millions of people search for &quot;word counter&quot;, &quot;JSON formatter&quot;, and
+   641→                          &quot;password generator&quot; every month. These tools answer real, recurring needs.
+   642→                        </p>
+   643→                      </CardContent>
+   644→                    </Card>
+   645→                    <Card className="text-center">
+   646→                      <CardContent className="p-6 sm:p-8">
+   647→                        <div className="flex h-12 w-12 mx-auto mb-4 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400">
+   648→                          <Zap className="h-6 w-6" />
+   649→                        </div>
+   650→                        <h3 className="font-semibold mb-2">Zero Marginal Cost</h3>
+   651→                        <p className="text-sm text-muted-foreground leading-relaxed">
+   652→                          These tools run entirely in the browser. No servers, no databases, no API costs.
+   653→                          Once built, they cost nearly nothing to maintain and scale.
+   654→                        </p>
+   655→                      </CardContent>
+   656→                    </Card>
+   657→                    <Card className="text-center">
+   658→                      <CardContent className="p-6 sm:p-8">
+   659→                        <div className="flex h-12 w-12 mx-auto mb-4 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400">
+   660→                          <Users className="h-6 w-6" />
+   661→                        </div>
+   662→                        <h3 className="font-semibold mb-2">Ad Revenue</h3>
+   663→                        <p className="text-sm text-muted-foreground leading-relaxed">
+   664→                          With Google AdSense or other ad networks, even modest traffic (10K-50K
+   665→                          visitors/month) can generate $500-$5,000+/month in passive income.
+   666→                        </p>
+   667→                      </CardContent>
+   668→                    </Card>
+   669→                  </div>
+   670→
+   671→                  {/* Revenue Examples */}
+   672→                  <div className="mt-10 p-6 sm:p-8 rounded-xl border bg-card">
+   673→                    <h3 className="font-semibold mb-4 text-center">Real-World Revenue Examples</h3>
+   674→                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+   675→                      {[
+   676→                        { site: 'SmallPDF.com', revenue: '$17.5M/yr', traffic: '30M+/mo' },
+   677→                        { site: 'TypingTest.com', revenue: '$140K/mo', traffic: '8M+/mo' },
+   678→                        { site: 'BuiltWith.com', revenue: '$995/mo/user', traffic: '2M+/mo' },
+   679→                        { site: 'UnitConverters.net', revenue: '$500K+/mo', traffic: '15M+/mo' },
+   680→                      ].map((example) => (
+   681→                        <div
+   682→                          key={example.site}
+   683→                          className="text-center p-4 rounded-lg bg-muted/50"
+   684→                        >
+   685→                          <p className="font-mono text-sm text-emerald-600 dark:text-emerald-400 font-medium">
+   686→                            {example.site}
+   687→                          </p>
+   688→                          <p className="text-lg font-bold mt-1">{example.revenue}</p>
+   689→                          <p className="text-xs text-muted-foreground">{example.traffic} visits</p>
+   690→                        </div>
+   691→                      ))}
+   692→                    </div>
+   693→                  </div>
+   694→                </div>
+   695→              </section>
+   696→            </motion.div>
+   697→          )}
+   698→        </AnimatePresence>
+   699→      </main>
+   700→
+   701→      {/* Sticky Footer */}
+   702→      <footer className="border-t bg-muted/30 mt-auto">
+   703→        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+   704→          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+   705→            <div>
+   706→              <div className="flex items-center gap-2 mb-3">
+   707→                <div className="flex h-7 w-7 items-center justify-center rounded-md bg-emerald-600 text-white">
+   708→                  <Zap className="h-4 w-4" />
+   709→                </div>
+   710→                <span className="font-bold">QuickTools</span>
+   711→              </div>
+   712→              <p className="text-sm text-muted-foreground leading-relaxed">
+   713→                Free online tools for developers, designers, and content creators. No signup, no tracking, no nonsense.
+   714→              </p>
+   715→            </div>
+   716→            <div>
+   717→              <h4 className="font-semibold text-sm mb-3">Text Tools</h4>
+   718→              <ul className="space-y-2 text-sm text-muted-foreground">
+   719→                <li><button onClick={() => navigateToTool('word-counter')} className="hover:text-foreground transition-colors">Word Counter</button></li>
+   720→                <li><button onClick={() => navigateToTool('lorem-ipsum')} className="hover:text-foreground transition-colors">Lorem Ipsum Generator</button></li>
+   721→                <li><button onClick={() => navigateToTool('case-converter')} className="hover:text-foreground transition-colors">Case Converter</button></li>
+   722→              </ul>
+   723→            </div>
+   724→            <div>
+   725→              <h4 className="font-semibold text-sm mb-3">Developer Tools</h4>
+   726→              <ul className="space-y-2 text-sm text-muted-foreground">
+   727→                <li><button onClick={() => navigateToTool('json-formatter')} className="hover:text-foreground transition-colors">JSON Formatter</button></li>
+   728→                <li><button onClick={() => navigateToTool('base64')} className="hover:text-foreground transition-colors">Base64 Encoder/Decoder</button></li>
+   729→                <li><button onClick={() => navigateToTool('url-encoder')} className="hover:text-foreground transition-colors">URL Encoder/Decoder</button></li>
+   730→              </ul>
+   731→            </div>
+   732→            <div>
+   733→              <h4 className="font-semibold text-sm mb-3">Other Tools</h4>
+   734→              <ul className="space-y-2 text-sm text-muted-foreground">
+   735→                <li><button onClick={() => navigateToTool('password-generator')} className="hover:text-foreground transition-colors">Password Generator</button></li>
+   736→                <li><button onClick={() => navigateToTool('color-picker')} className="hover:text-foreground transition-colors">Color Picker</button></li>
+   737→              </ul>
+   738→            </div>
+   739→          </div>
+   740→          <Separator className="mb-6" />
+   741→          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+   742→            <p>&copy; {new Date().getFullYear()} QuickTools. All tools run 100% in your browser.</p>
+   743→            <p>
+   744→              Built with{' '}
+   745→              <span className="text-emerald-600 dark:text-emerald-400 font-medium">Next.js</span>{' '}
+   746→              +{' '}
+   747→              <span className="text-emerald-600 dark:text-emerald-400 font-medium">shadcn/ui</span>
+   748→            </p>
+   749→          </div>
+   750→        </div>
+   751→      </footer>
+   752→    </div>
+   753→  );
+   754→}
