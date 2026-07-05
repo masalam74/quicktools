@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import QuickToolsApp from '@/components/quicktools-app';
 import { getToolData, generateJsonLd, generateHomepageJsonLd, toolsData } from '@/lib/tools-data';
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://quicktools.vercel.app';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://quicktools-tau.vercel.app';
 
 export async function generateMetadata({
   searchParams,

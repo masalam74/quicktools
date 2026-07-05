@@ -195,7 +195,7 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
                 </div>
                 {/* Breadcrumb URL */}
                 <p className="text-xs text-muted-foreground mt-1 font-mono">
-                  quicktools.vercel.app/?tool={currentTool.slug}
+                  quicktools-tau.vercel.app/?tool={currentTool.slug}
                 </p>
               </div>
 

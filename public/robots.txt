@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://quicktools.vercel.app/sitemap.xml
+Sitemap: https://quicktools-tau.vercel.app/sitemap.xml
