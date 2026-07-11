@@ -124,9 +124,16 @@ export default function PrivacyPolicy() {
         </div>
       </main>
 
-      <footer className="border-t mt-auto">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 text-center text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} QuickTools. All rights reserved.
+      <footer className="border-t bg-muted/30 mt-auto">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+            <p>&copy; {new Date().getFullYear()} QuickTools. All rights reserved.</p>
+            <div className="flex gap-4">
+              <a href="/about" className="hover:text-foreground transition-colors">About Us</a>
+              <a href="/contact" className="hover:text-foreground transition-colors">Contact Us</a>
+              <a href="/terms" className="hover:text-foreground transition-colors">Terms of Service</a>
+            </div>
+          </div>
         </div>
       </footer>
     </div>

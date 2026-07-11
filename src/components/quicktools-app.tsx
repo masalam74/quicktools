@@ -475,12 +475,12 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
           <Separator className="mb-6" />
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
             <p>&copy; {new Date().getFullYear()} QuickTools. All tools run 100% in your browser.</p>
-            <p>
-              Built with{' '}
-              <span className="text-emerald-600 dark:text-emerald-400 font-medium">Next.js</span>{' '}
-              +{' '}
-              <span className="text-emerald-600 dark:text-emerald-400 font-medium">shadcn/ui</span>
-            </p>
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
+              <a href="/about" className="hover:text-foreground transition-colors">About Us</a>
+              <a href="/contact" className="hover:text-foreground transition-colors">Contact Us</a>
+              <a href="/privacy" className="hover:text-foreground transition-colors">Privacy Policy</a>
+              <a href="/terms" className="hover:text-foreground transition-colors">Terms of Service</a>
+            </div>
           </div>
         </div>
       </footer>
