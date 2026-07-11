@@ -149,14 +149,16 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
               </motion.div>
             )}
 
-            {!currentTool && (
-              <div className="flex items-center gap-2">
+            <nav className="flex items-center gap-1 sm:gap-3 text-sm">
+              <a href="/about" className="text-muted-foreground hover:text-foreground transition-colors hidden md:inline">About</a>
+              <a href="/contact" className="text-muted-foreground hover:text-foreground transition-colors hidden md:inline">Contact</a>
+              {!currentTool && (
                 <Badge variant="secondary" className="hidden sm:flex items-center gap-1">
                   <Globe className="h-3 w-3" />
                   8 Free Tools
                 </Badge>
-              </div>
-            )}
+              )}
+            </nav>
           </div>
         </div>
       </header>
@@ -292,7 +294,7 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
                       className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto"
                     >
                       A collection of fast, free, and privacy-friendly online tools for developers,
-                      designers, and content creators. No ads, no tracking, no nonsense.
+                      designers, and content creators. No tracking, no signup, just tools that work.
                     </motion.p>
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
