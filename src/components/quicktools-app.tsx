@@ -27,7 +27,6 @@ import {
   Share2,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { AdSenseAd } from '@/components/adsense-ad';
 import {
   toolsData,
   categories,
@@ -207,34 +206,13 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
                     <span className="hidden sm:inline">Share</span>
                   </Button>
                 </div>
-              </div>
-
-              {/* Top Banner Ad */}
-              <div className="mb-6">
-                <AdSenseAd adSlot="top-banner" adFormat="horizontal" className="w-full" style={{ display: 'block', minHeight: '90px' }} />
-              </div>
-
-              {/* Tool Content with Sidebar Ad Layout */}
+              </div>{/* Tool content */}
               <div className="flex flex-col lg:flex-row gap-6">
                 <div className="flex-1 min-w-0">
                   {getToolComponent(currentTool.id)}
                 </div>
-
-                {/* Sidebar Ads - Desktop Only */}
-                <div className="hidden lg:block w-[300px] shrink-0">
-                  <div className="sticky top-24 space-y-6">
-                    <AdSenseAd adSlot="sidebar-1" adFormat="rectangle" style={{ display: 'block', minHeight: '250px' }} />
-                    <AdSenseAd adSlot="sidebar-2" adFormat="rectangle" style={{ display: 'block', minHeight: '250px' }} />
-                  </div>
-                </div>
               </div>
-
-              {/* Mobile Ad - Bottom */}
-              <div className="mt-6 lg:hidden">
-                <AdSenseAd adSlot="mobile-bottom" adFormat="horizontal" className="w-full" style={{ display: 'block', minHeight: '100px' }} />
-              </div>
-
-              {/* Related Tools */}
+{/* Related Tools */}
               <div className="mt-10">
                 <h2 className="text-lg font-semibold mb-4">Related Tools</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -429,14 +407,7 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
                     </motion.div>
                   ))}
                 </div>
-
-                {/* Bottom Banner Ad */}
-                <div className="mt-12">
-                  <div className="max-w-4xl mx-auto">
-                    <AdSenseAd adSlot="bottom-banner" adFormat="horizontal" className="w-full" style={{ display: 'block', minHeight: '90px' }} />
-                  </div>
-                </div>
-              </section>
+</section>
 
             </motion.div>
           )}
