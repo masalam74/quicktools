@@ -82,7 +82,7 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
   const navigateToTool = useCallback(
     (slug: string | null) => {
       if (slug) {
-        router.push(`/?tool=${slug}`, { scroll: false });
+        router.push(`/${slug}`, { scroll: false });
       } else {
         router.push('/', { scroll: false });
       }
@@ -245,7 +245,7 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
                           </div>
                           <div className="min-w-0">
                             <p className="text-sm font-medium group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors truncate">
-                              {tool.name}
+                              <a href={`/${tool.slug}`} onClick={(event) => event.stopPropagation()}>{tool.name}</a>
                             </p>
                             <p className="text-xs text-muted-foreground">{tool.searchVolume} searches</p>
                           </div>
@@ -402,7 +402,7 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
                             </Badge>
                           </div>
                           <h3 className="font-semibold mb-1.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                            {tool.name}
+                            <a href={`/${tool.slug}`} onClick={(event) => event.stopPropagation()}>{tool.name}</a>
                           </h3>
                           <p className="text-sm text-muted-foreground leading-relaxed mb-4 line-clamp-2">
                             {tool.description}
@@ -453,24 +453,24 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
             <div>
               <h4 className="font-semibold text-sm mb-3">Text Tools</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><button onClick={() => navigateToTool('word-counter')} className="hover:text-foreground transition-colors">Word Counter</button></li>
-                <li><button onClick={() => navigateToTool('lorem-ipsum-generator')} className="hover:text-foreground transition-colors">Lorem Ipsum Generator</button></li>
-                <li><button onClick={() => navigateToTool('case-converter')} className="hover:text-foreground transition-colors">Case Converter</button></li>
+                <li><a href="/word-counter" className="hover:text-foreground transition-colors">Word Counter</a></li>
+                <li><a href="/lorem-ipsum-generator" className="hover:text-foreground transition-colors">Lorem Ipsum Generator</a></li>
+                <li><a href="/case-converter" className="hover:text-foreground transition-colors">Case Converter</a></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold text-sm mb-3">Developer Tools</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><button onClick={() => navigateToTool('json-formatter')} className="hover:text-foreground transition-colors">JSON Formatter</button></li>
-                <li><button onClick={() => navigateToTool('base64-encoder-decoder')} className="hover:text-foreground transition-colors">Base64 Encoder/Decoder</button></li>
-                <li><button onClick={() => navigateToTool('url-encoder-decoder')} className="hover:text-foreground transition-colors">URL Encoder/Decoder</button></li>
+                <li><a href="/json-formatter" className="hover:text-foreground transition-colors">JSON Formatter</a></li>
+                <li><a href="/base64-encoder-decoder" className="hover:text-foreground transition-colors">Base64 Encoder/Decoder</a></li>
+                <li><a href="/url-encoder-decoder" className="hover:text-foreground transition-colors">URL Encoder/Decoder</a></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold text-sm mb-3">Other Tools</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><button onClick={() => navigateToTool('password-generator')} className="hover:text-foreground transition-colors">Password Generator</button></li>
-                <li><button onClick={() => navigateToTool('color-picker-converter')} className="hover:text-foreground transition-colors">Color Picker</button></li>
+                <li><a href="/password-generator" className="hover:text-foreground transition-colors">Password Generator</a></li>
+                <li><a href="/color-picker-converter" className="hover:text-foreground transition-colors">Color Picker</a></li>
               </ul>
             </div>
           </div>
