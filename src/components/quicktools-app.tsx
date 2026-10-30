@@ -43,6 +43,17 @@ import Base64Tool from '@/components/tools/base64-tool';
 import UrlTool from '@/components/tools/url-tool';
 import ColorPicker from '@/components/tools/color-picker';
 
+const toolInstructions: Record<string, string> = {
+  "word-counter": "Enter or paste your text to see word, character, sentence, and paragraph counts.",
+  "lorem-ipsum": "Select the number of paragraphs, then generate and copy placeholder text.",
+  "json-formatter": "Paste JSON, choose indentation, and click Format to organize it.",
+  "case-converter": "Enter or paste text, then choose the capitalization style.",
+  "password-generator": "Choose the length and character options, then generate and copy a password.",
+  "base64": "Enter text, then select Encode or Decode.",
+  "url-encoder": "Enter text or a URL component, then select Encode or Decode.",
+  "color-picker": "Choose a color or enter a color value, then copy your preferred format."
+};
+
 const iconMap: Record<string, React.ReactNode> = {
   Type: <Type className="h-6 w-6" />,
   FileText: <FileText className="h-6 w-6" />,
@@ -184,6 +195,7 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
                   <div className="flex-1 min-w-0">
                     <h1 className="text-2xl font-bold tracking-tight">{currentTool.name}</h1>
                     <p className="text-sm text-muted-foreground">{currentTool.description}</p>
+                    <p className="mt-2 text-sm text-muted-foreground"><strong className="text-foreground">How to use:</strong> {toolInstructions[currentTool.id]}</p>
                   </div>
                   <Button
                     variant="outline"
