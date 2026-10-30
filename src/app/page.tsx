@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { permanentRedirect } from 'next/navigation';
 import QuickToolsApp from '@/components/quicktools-app';
 import { getToolData, generateJsonLd, generateHomepageJsonLd, toolsData } from '@/lib/tools-data';
 
@@ -82,6 +83,7 @@ export default async function HomePage({
   const params = await searchParams;
   const toolSlug = params.tool || null;
   const tool = toolSlug ? getToolData(toolSlug) : undefined;
+  if (tool) permanentRedirect(`/${tool.slug}`);
 
   const jsonLd = tool
     ? generateJsonLd(tool, BASE_URL)
