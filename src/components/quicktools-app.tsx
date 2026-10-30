@@ -195,10 +195,6 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
                     <span className="hidden sm:inline">Share</span>
                   </Button>
                 </div>
-                {/* Breadcrumb URL */}
-                <p className="text-xs text-muted-foreground mt-1 font-mono">
-                  quicktools-tau.vercel.app/?tool={currentTool.slug}
-                </p>
               </div>
 
               {/* Top Banner Ad */}
