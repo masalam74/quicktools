@@ -27,7 +27,6 @@ import {
   Share2,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { AdSenseAd } from '@/components/adsense-ad';
 import {
   toolsData,
   categories,
@@ -42,6 +41,17 @@ import PasswordGenerator from '@/components/tools/password-generator';
 import Base64Tool from '@/components/tools/base64-tool';
 import UrlTool from '@/components/tools/url-tool';
 import ColorPicker from '@/components/tools/color-picker';
+
+const toolInstructions: Record<string, string> = {
+  "word-counter": "Enter or paste your text to see word, character, sentence, and paragraph counts.",
+  "lorem-ipsum": "Select the number of paragraphs, then generate and copy placeholder text.",
+  "json-formatter": "Paste JSON, choose indentation, and click Format to organize it.",
+  "case-converter": "Enter or paste text, then choose the capitalization style.",
+  "password-generator": "Choose the length and character options, then generate and copy a password.",
+  "base64": "Enter text, then select Encode or Decode.",
+  "url-encoder": "Enter text or a URL component, then select Encode or Decode.",
+  "color-picker": "Choose a color or enter a color value, then copy your preferred format."
+};
 
 const iconMap: Record<string, React.ReactNode> = {
   Type: <Type className="h-6 w-6" />,
@@ -82,7 +92,7 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
   const navigateToTool = useCallback(
     (slug: string | null) => {
       if (slug) {
-        router.push(`/?tool=${slug}`, { scroll: false });
+        router.push(`/${slug}`, { scroll: false });
       } else {
         router.push('/', { scroll: false });
       }
@@ -184,6 +194,7 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
                   <div className="flex-1 min-w-0">
                     <h1 className="text-2xl font-bold tracking-tight">{currentTool.name}</h1>
                     <p className="text-sm text-muted-foreground">{currentTool.description}</p>
+                    <p className="mt-2 text-sm text-muted-foreground"><strong className="text-foreground">How to use:</strong> {toolInstructions[currentTool.id]}</p>
                   </div>
                   <Button
                     variant="outline"
@@ -195,38 +206,13 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
                     <span className="hidden sm:inline">Share</span>
                   </Button>
                 </div>
-                {/* Breadcrumb URL */}
-                <p className="text-xs text-muted-foreground mt-1 font-mono">
-                  quicktools-tau.vercel.app/?tool={currentTool.slug}
-                </p>
-              </div>
-
-              {/* Top Banner Ad */}
-              <div className="mb-6">
-                <AdSenseAd adSlot="top-banner" adFormat="horizontal" className="w-full" style={{ display: 'block', minHeight: '90px' }} />
-              </div>
-
-              {/* Tool Content with Sidebar Ad Layout */}
+              </div>{/* Tool content */}
               <div className="flex flex-col lg:flex-row gap-6">
                 <div className="flex-1 min-w-0">
                   {getToolComponent(currentTool.id)}
                 </div>
-
-                {/* Sidebar Ads - Desktop Only */}
-                <div className="hidden lg:block w-[300px] shrink-0">
-                  <div className="sticky top-24 space-y-6">
-                    <AdSenseAd adSlot="sidebar-1" adFormat="rectangle" style={{ display: 'block', minHeight: '250px' }} />
-                    <AdSenseAd adSlot="sidebar-2" adFormat="rectangle" style={{ display: 'block', minHeight: '250px' }} />
-                  </div>
-                </div>
               </div>
-
-              {/* Mobile Ad - Bottom */}
-              <div className="mt-6 lg:hidden">
-                <AdSenseAd adSlot="mobile-bottom" adFormat="horizontal" className="w-full" style={{ display: 'block', minHeight: '100px' }} />
-              </div>
-
-              {/* Related Tools */}
+{/* Related Tools */}
               <div className="mt-10">
                 <h2 className="text-lg font-semibold mb-4">Related Tools</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -245,7 +231,7 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
                           </div>
                           <div className="min-w-0">
                             <p className="text-sm font-medium group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors truncate">
-                              {tool.name}
+                              <a href={`/${tool.slug}`} onClick={(event) => event.stopPropagation()}>{tool.name}</a>
                             </p>
                             <p className="text-xs text-muted-foreground">{tool.searchVolume} searches</p>
                           </div>
@@ -402,7 +388,7 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
                             </Badge>
                           </div>
                           <h3 className="font-semibold mb-1.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                            {tool.name}
+                            <a href={`/${tool.slug}`} onClick={(event) => event.stopPropagation()}>{tool.name}</a>
                           </h3>
                           <p className="text-sm text-muted-foreground leading-relaxed mb-4 line-clamp-2">
                             {tool.description}
@@ -421,14 +407,7 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
                     </motion.div>
                   ))}
                 </div>
-
-                {/* Bottom Banner Ad */}
-                <div className="mt-12">
-                  <div className="max-w-4xl mx-auto">
-                    <AdSenseAd adSlot="bottom-banner" adFormat="horizontal" className="w-full" style={{ display: 'block', minHeight: '90px' }} />
-                  </div>
-                </div>
-              </section>
+</section>
 
             </motion.div>
           )}
@@ -453,24 +432,24 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
             <div>
               <h4 className="font-semibold text-sm mb-3">Text Tools</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><button onClick={() => navigateToTool('word-counter')} className="hover:text-foreground transition-colors">Word Counter</button></li>
-                <li><button onClick={() => navigateToTool('lorem-ipsum-generator')} className="hover:text-foreground transition-colors">Lorem Ipsum Generator</button></li>
-                <li><button onClick={() => navigateToTool('case-converter')} className="hover:text-foreground transition-colors">Case Converter</button></li>
+                <li><a href="/word-counter" className="hover:text-foreground transition-colors">Word Counter</a></li>
+                <li><a href="/lorem-ipsum-generator" className="hover:text-foreground transition-colors">Lorem Ipsum Generator</a></li>
+                <li><a href="/case-converter" className="hover:text-foreground transition-colors">Case Converter</a></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold text-sm mb-3">Developer Tools</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><button onClick={() => navigateToTool('json-formatter')} className="hover:text-foreground transition-colors">JSON Formatter</button></li>
-                <li><button onClick={() => navigateToTool('base64-encoder-decoder')} className="hover:text-foreground transition-colors">Base64 Encoder/Decoder</button></li>
-                <li><button onClick={() => navigateToTool('url-encoder-decoder')} className="hover:text-foreground transition-colors">URL Encoder/Decoder</button></li>
+                <li><a href="/json-formatter" className="hover:text-foreground transition-colors">JSON Formatter</a></li>
+                <li><a href="/base64-encoder-decoder" className="hover:text-foreground transition-colors">Base64 Encoder/Decoder</a></li>
+                <li><a href="/url-encoder-decoder" className="hover:text-foreground transition-colors">URL Encoder/Decoder</a></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold text-sm mb-3">Other Tools</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><button onClick={() => navigateToTool('password-generator')} className="hover:text-foreground transition-colors">Password Generator</button></li>
-                <li><button onClick={() => navigateToTool('color-picker-converter')} className="hover:text-foreground transition-colors">Color Picker</button></li>
+                <li><a href="/password-generator" className="hover:text-foreground transition-colors">Password Generator</a></li>
+                <li><a href="/color-picker-converter" className="hover:text-foreground transition-colors">Color Picker</a></li>
               </ul>
             </div>
           </div>

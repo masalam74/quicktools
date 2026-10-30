@@ -5,7 +5,7 @@ const BASE_URL = 'https://quicktools-tau.vercel.app';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const toolUrls = toolsData.map((tool) => ({
-    url: `${BASE_URL}/?tool=${tool.slug}`,
+    url: `${BASE_URL}/${tool.slug}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.8,

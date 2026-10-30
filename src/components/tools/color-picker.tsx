@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
@@ -276,24 +276,12 @@ export default function ColorPicker() {
 
   return (
     <Card className="w-full max-w-2xl mx-auto border-emerald-200 shadow-lg">
-      <CardHeader className="pb-4">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-emerald-100 text-emerald-600">
-            <Palette className="h-5 w-5" />
-          </div>
-          <div>
-            <CardTitle className="text-xl font-bold text-foreground">Color Picker & Converter</CardTitle>
-            <p className="text-sm text-muted-foreground mt-0.5">Pick, convert, and copy colors in any format</p>
-          </div>
-        </div>
-      </CardHeader>
-
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 pt-6">
         {/* ── Color Picker & Preview Row ── */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
           {/* Native color input */}
           <div className="flex flex-col items-center gap-2">
-            <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Pick Color</Label>
+            <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">1. Choose Color</Label>
             <input
               type="color"
               value={hex}
@@ -304,7 +292,7 @@ export default function ColorPicker() {
 
           {/* Color swatch preview */}
           <div className="flex flex-col items-center gap-2 flex-1 min-w-0">
-            <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Preview</Label>
+            <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Selected Color</Label>
             <div className="w-full h-[88px] rounded-lg border-2 border-emerald-200 relative overflow-hidden">
               {/* Checkerboard layer for transparency */}
               {alpha < 100 && (
@@ -331,10 +319,10 @@ export default function ColorPicker() {
             <Button
               onClick={handleRandomColor}
               variant="outline"
-              className="h-[88px] w-[88px] rounded-lg border-2 border-dashed border-emerald-300 bg-emerald-50/50 text-emerald-600 hover:bg-emerald-100 hover:text-emerald-700 hover:border-emerald-400 flex flex-col gap-1.5 transition-colors"
+              className="h-[88px] w-[104px] rounded-lg border-2 border-dashed border-emerald-300 bg-emerald-50/50 text-emerald-600 hover:bg-emerald-100 hover:text-emerald-700 hover:border-emerald-400 flex flex-col gap-1.5 transition-colors"
             >
               <Shuffle className="h-6 w-6" />
-              <span className="text-xs font-medium">Random</span>
+              <span className="text-xs font-medium">Random Color</span>
             </Button>
           </div>
         </div>
