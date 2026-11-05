@@ -453,6 +453,17 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
               </ul>
             </div>
           </div>
+          <div className="mb-6 text-center text-sm text-muted-foreground">
+            A digital product by{' '}
+            <a
+              href="https://brightorbit-labs.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-emerald-700 dark:text-emerald-400 hover:underline"
+            >
+              BrightOrbit Labs
+            </a>
+          </div>
           <Separator className="mb-6" />
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
             <p>&copy; {new Date().getFullYear()} QuickTools. All tools run 100% in your browser.</p>
