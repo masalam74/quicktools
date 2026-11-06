@@ -33,6 +33,7 @@ import {
   getToolData,
   type ToolData,
 } from '@/lib/tools-data';
+import { toolGuides } from '@/lib/tool-guides';
 import WordCounter from '@/components/tools/word-counter';
 import LoremIpsum from '@/components/tools/lorem-ipsum';
 import JsonFormatter from '@/components/tools/json-formatter';
@@ -241,6 +242,33 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
                       <h4 className="font-medium text-foreground">Can I use this to check a character limit?</h4>
                       <p>Yes. Compare the character total with the limit, and check whether the platform counts spaces. Unicode characters such as emoji may be counted differently by different services.</p>
                     </div>
+                  </div>
+                </section>
+              )}
+              {toolGuides[currentTool.id] && (
+                <section aria-labelledby={`guide-${currentTool.id}`} className="mt-10 rounded-xl border bg-card p-5 sm:p-7">
+                  <h2 id={`guide-${currentTool.id}`} className="text-xl font-semibold">
+                    {toolGuides[currentTool.id].title}
+                  </h2>
+                  <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                    {toolGuides[currentTool.id].intro}
+                  </p>
+                  <h3 className="mt-6 font-semibold">Tips and examples</h3>
+                  <ul className="mt-2 list-disc space-y-2 pl-5 text-sm leading-7 text-muted-foreground">
+                    {toolGuides[currentTool.id].details.map(([label, explanation]) => (
+                      <li key={label}>
+                        <strong className="text-foreground">{label}:</strong> {explanation}
+                      </li>
+                    ))}
+                  </ul>
+                  <h3 className="mt-6 font-semibold">Common questions</h3>
+                  <div className="mt-3 space-y-4 text-sm leading-7 text-muted-foreground">
+                    {toolGuides[currentTool.id].faq.map(([question, answer]) => (
+                      <div key={question}>
+                        <h4 className="font-medium text-foreground">{question}</h4>
+                        <p>{answer}</p>
+                      </div>
+                    ))}
                   </div>
                 </section>
               )}
