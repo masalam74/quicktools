@@ -33,6 +33,7 @@ import {
   getToolData,
   type ToolData,
 } from '@/lib/tools-data';
+import { toolGuides } from '@/lib/tool-guides';
 import WordCounter from '@/components/tools/word-counter';
 import LoremIpsum from '@/components/tools/lorem-ipsum';
 import JsonFormatter from '@/components/tools/json-formatter';
@@ -212,6 +213,65 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
                   {getToolComponent(currentTool.id)}
                 </div>
               </div>
+              {currentTool.id === 'word-counter' && (
+                <section aria-labelledby="word-counter-guide" className="mt-10 rounded-xl border bg-card p-5 sm:p-7">
+                  <h2 id="word-counter-guide" className="text-xl font-semibold">How to count words and characters</h2>
+                  <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                    Paste or type your text into the Word Counter above. The counts update as you edit,
+                    so you can check an essay draft, assignment, email, blog post, or social caption
+                    without submitting the text to a server for counting.
+                  </p>
+                  <h3 className="mt-6 font-semibold">What each count means</h3>
+                  <ul className="mt-2 list-disc space-y-2 pl-5 text-sm leading-7 text-muted-foreground">
+                    <li><strong className="text-foreground">Words:</strong> groups of text separated by whitespace. For example, “Research helps people learn” contains four words.</li>
+                    <li><strong className="text-foreground">Characters:</strong> all typed characters, including spaces and punctuation. The tool also shows a separate count without whitespace.</li>
+                    <li><strong className="text-foreground">Sentences and paragraphs:</strong> estimates based on punctuation and paragraph breaks. Abbreviations and unusual formatting can affect the counts.</li>
+                    <li><strong className="text-foreground">Reading and speaking time:</strong> estimates using 200 words per minute for reading and 130 for speaking. Actual speeds vary.</li>
+                  </ul>
+                  <h3 className="mt-6 font-semibold">Common questions</h3>
+                  <div className="mt-3 space-y-4 text-sm leading-7 text-muted-foreground">
+                    <div>
+                      <h4 className="font-medium text-foreground">Does the word count include punctuation?</h4>
+                      <p>Punctuation attached to a word does not create an extra word. Word counting is based on whitespace-separated groups.</p>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-foreground">Why can two word counters give different totals?</h4>
+                      <p>Counting rules differ for hyphenated expressions, symbols, and non-space-separated languages. Check your institution's or publisher's counting rules when a strict limit applies.</p>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-foreground">Can I use this to check a character limit?</h4>
+                      <p>Yes. Compare the character total with the limit, and check whether the platform counts spaces. Unicode characters such as emoji may be counted differently by different services.</p>
+                    </div>
+                  </div>
+                </section>
+              )}
+              {toolGuides[currentTool.id] && (
+                <section aria-labelledby={`guide-${currentTool.id}`} className="mt-10 rounded-xl border bg-card p-5 sm:p-7">
+                  <h2 id={`guide-${currentTool.id}`} className="text-xl font-semibold">
+                    {toolGuides[currentTool.id].title}
+                  </h2>
+                  <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                    {toolGuides[currentTool.id].intro}
+                  </p>
+                  <h3 className="mt-6 font-semibold">Tips and examples</h3>
+                  <ul className="mt-2 list-disc space-y-2 pl-5 text-sm leading-7 text-muted-foreground">
+                    {toolGuides[currentTool.id].details.map(([label, explanation]) => (
+                      <li key={label}>
+                        <strong className="text-foreground">{label}:</strong> {explanation}
+                      </li>
+                    ))}
+                  </ul>
+                  <h3 className="mt-6 font-semibold">Common questions</h3>
+                  <div className="mt-3 space-y-4 text-sm leading-7 text-muted-foreground">
+                    {toolGuides[currentTool.id].faq.map(([question, answer]) => (
+                      <div key={question}>
+                        <h4 className="font-medium text-foreground">{question}</h4>
+                        <p>{answer}</p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
 {/* Related Tools */}
               <div className="mt-10">
                 <h2 className="text-lg font-semibold mb-4">Related Tools</h2>
@@ -426,7 +486,7 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
                 <span className="font-bold">QuickTools</span>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Free online tools for developers, designers, and content creators. No signup, no tracking, no nonsense.
+                Free online tools for developers, designers, and content creators. No signup required. Tools process your input locally in your browser; basic website analytics help us understand visits.
               </p>
             </div>
             <div>
