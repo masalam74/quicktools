@@ -516,7 +516,7 @@ function QuickToolsAppInner({ initialTool }: { initialTool: string | null }) {
           <div className="mb-6 text-center text-sm text-muted-foreground">
             A digital product by{' '}
             <a
-              href="https://brightorbit-labs.vercel.app/"
+              href="https://brightorbit-labs.pages.dev/"
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium text-emerald-700 dark:text-emerald-400 hover:underline"
